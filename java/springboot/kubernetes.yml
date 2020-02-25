@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: preference
+  labels:
+    app: preference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: preference
+  template:
+    metadata:
+      labels:
+        app: preference
+    spec:
+      containers:
+      - name: preference
+        image: gcr.io/cirrus-initial-project/preference:latest
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: preference
+  labels:
+    app: preference    
+spec:
+  ports:
+  - name: http
+    port: 8080
+  selector:
+    app: preference
+  type: LoadBalancer
