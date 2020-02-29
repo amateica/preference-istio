@@ -27,6 +27,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: preference
+  namespace: istio-demo
   labels:
     app: preference    
 spec:
