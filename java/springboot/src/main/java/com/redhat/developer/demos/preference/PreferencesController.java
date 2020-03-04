@@ -4,12 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class PreferencesController {
@@ -28,10 +32,15 @@ public class PreferencesController {
     }
 
     @RequestMapping("/")
-    public ResponseEntity<?> getPreferences() {
+    public ResponseEntity<?> getPreferences(HttpServletRequest httpServletRequest) {
         try {
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(remoteURL, String.class);
-            String response = responseEntity.getBody();
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+            String header = httpServletRequest.getHeader("x-api-key");
+            headers.add("x-api-key", header);
+            ResponseEntity<String> entity = restTemplate.exchange(
+                    remoteURL, HttpMethod.GET, new HttpEntity<>(headers),
+                    String.class);
+            String response = entity.getBody();
             return ResponseEntity.ok(String.format(RESPONSE_STRING_FORMAT, response.trim()));
         } catch (HttpStatusCodeException ex) {
             logger.warn("Exception trying to get the response from recommendation service.", ex);
