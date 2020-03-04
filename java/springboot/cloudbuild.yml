@@ -36,6 +36,8 @@ steps:
   - 'rollout'
   - 'restart'
   - 'deployment/preference'
+  - '-n'
+  - 'istio-demo'
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
   - 'CLOUDSDK_CONTAINER_CLUSTER=istio-cluster'
