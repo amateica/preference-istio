@@ -37,6 +37,7 @@ public class PreferencesController {
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             String header = httpServletRequest.getHeader("x-api-key");
             headers.add("x-api-key", header);
+            logger.info("API-KEY: "+header);
             ResponseEntity<String> entity = restTemplate.exchange(
                     remoteURL, HttpMethod.GET, new HttpEntity<>(headers),
                     String.class);
